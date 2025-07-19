@@ -1,6 +1,6 @@
 # PROJECT ARRHYTHMIA
 
-## Disclaimer:
+## Disclaimer
 This repository does not have any official medical affiliation.
 
 ## Introduction
@@ -9,7 +9,7 @@ The dataset used for this project is from the:
 [UCI Machine Learning Repository](https://archive.ics.uci.edu/ml/datasets/Arrhythmia)
 This data consists of 452 examples across 16 different classes. Among these, 245 examples are labeled as "Normal," while the remaining represent 12 different types of arrhythmias, including "Coronary artery disease" and "Right bundle branch block"
 
-**Objectives**:
+**Objectives**
 The goal of this project is to predict whether a person suffers from arrhythmia, and if they do suffer from arrhythmia, classify the type of arrhythmia into one of the 12 available groups.
 
 ## Algorithms used in the project:
