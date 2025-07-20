@@ -20,3 +20,23 @@ The goal of this project is to predict whether a person suffers from arrhythmia,
  5. **Kernelized Support Vector Classifier (SVC)**
  6. **Random Forest Classifier**
  7. **Principal Component Analysis (PCA)** (For dimensionality reduction)
+
+## Project workflow
+
+### Step 1 : Data exploration
+- Analyzed the 279 features to identify patterns and correlations that could help with the prediction.
+- Addressed the challenge of the high number of features compared to the limited number of examples by employing PCA(Principal component analysis).
+
+### Step 2 : Data pre-processing:
+- Handled missing values, standardized data, and prepared it for machine learning models.
+- Applied **Principal component analysis** to reduce the feature space and eliminate collinearity, improving both execution time and model performance.
+
+### Step 3 : Model Training and evaluation
+- Trained various machine learning algorithms on the dataset.
+- Evaluated model performance using accuracy, recall and other relevant metrics.
+
+### Step 4 : Model Tuning with PCA
+- PCA helped reduce the complexity of the dataset, leading to improved model accuracy and reduced overfitting.
+-  After applying PCA, models were retrained, and significant improvements were observed.
+
+## Results
