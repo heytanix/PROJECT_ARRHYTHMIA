@@ -42,5 +42,3 @@ The goal of this project is to predict whether a person suffers from arrhythmia,
 ### Step 4 : Model Tuning with PCA
 - PCA helped reduce the complexity of the dataset, leading to improved model accuracy and reduced overfitting.
 -  After applying PCA, models were retrained, and significant improvements were observed.
-
-## Results
