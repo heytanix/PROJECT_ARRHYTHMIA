@@ -46,3 +46,13 @@ The goal of this project is to predict whether a person suffers from arrhythmia,
 
 ### Conclusion
 Applying **Principal Component Analysis(PCA)** to the resampled data significantly improved the performance of the models. PCA works by creating non-collinear components that prioritize variables with high variance, thus reducing dimensionality and collinearity, which are key issues in large datasets. PCA not only enhanced the overall execution time but also improved the quality of predictions.
+
+## Acknowledgments
+
+- [UCI Machine Learning Repository](https://archive.ics.uci.edu/ml/datasets/Arrhythmia)
+- [Scikit-learn Documentation](https://scikit-learn.org/stable/)
+- [PCA Concepts](https://towardsdatascience.com/pca-using-python-scikit-learn-e653f8989e60)
+
+---
+
+This `README.md` offers clear documentation of the objectives, algorithms used, results, and the significance of PCA in your project. It also provides essential information on how to run the project and the prerequisites.
