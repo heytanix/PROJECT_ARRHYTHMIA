@@ -13,6 +13,7 @@ This data consists of 452 examples across 16 different classes. Among these, 245
 
 **Objectives**
 The goal of this project is to predict whether a person suffers from arrhythmia, and if they do suffer from arrhythmia, classify the type of arrhythmia into one of the 12 available groups.
+
 #### 🫡 You can help me by Donating
 [![BuyMeACoffee](https://img.shields.io/badge/Buy%20Me%20a%20Coffee-ffdd00?style=for-the-badge&logo=buy-me-a-coffee&logoColor=black)](https://buymeacoffee.com/heytanix)
 
@@ -42,3 +43,6 @@ The goal of this project is to predict whether a person suffers from arrhythmia,
 ### Step 4 : Model Tuning with PCA
 - PCA helped reduce the complexity of the dataset, leading to improved model accuracy and reduced overfitting.
 -  After applying PCA, models were retrained, and significant improvements were observed.
+
+### Conclusion
+Applying **Principal Component Analysis(PCA)** to the resampled data significantly improved the performance of the models. PCA works by creating non-collinear components that prioritize variables with high variance, thus reducing dimensionality and collinearity, which are key issues in large datasets. PCA not only enhanced the overall execution time but also improved the quality of predictions.
