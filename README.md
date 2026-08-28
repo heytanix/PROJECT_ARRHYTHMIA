@@ -1,58 +1,109 @@
+# Arrhythmia Classifier
 
+A machine learning system that classifies cardiac arrhythmia from ECG-derived features, served as a production-style REST API. Raw signal features go through an imputation → scaling → PCA pipeline into a Random Forest classifier, with the fitted pipeline exported and served behind FastAPI in a Docker container.
 
-# PROJECT ARRHYTHMIA
+## Problem
 
-## Disclaimer
-This repository does not have any official medical affiliation.
+Given 278 ECG-derived measurements (rhythm intervals, wave amplitudes, and per-lead signal features), predict which of **16 classes** a patient falls into: "Normal" or one of 15 arrhythmia types (e.g. ischemic changes, bundle branch block, AV block, atrial fibrillation). This is a multi-class classification problem with a small sample size and a feature count close to the number of examples, which makes dimensionality reduction essential.
 
-## Introduction
-This project focuses on predicting and classifying arrhythmia using various machine learning algorithms.
-The dataset used for this project is from the:
-[UCI Machine Learning Repository](https://archive.ics.uci.edu/ml/datasets/Arrhythmia)
-This data consists of 452 examples across 16 different classes. Among these, 245 examples are labeled as "Normal," while the remaining represent 12 different types of arrhythmias, including "Coronary artery disease" and "Right bundle branch block"
+## Dataset
 
-**Objectives**
-The goal of this project is to predict whether a person suffers from arrhythmia, and if they do suffer from arrhythmia, classify the type of arrhythmia into one of the 12 available groups.
+[UCI Machine Learning Repository — Arrhythmia Data Set](https://archive.ics.uci.edu/ml/datasets/Arrhythmia)
+- 452 patient records, 279 raw attributes + 1 class label
+- 16 classes (245 "Normal" examples, remainder spread across 15 arrhythmia types)
+- Contains missing values (encoded as `"?"`) and one column with excessive missingness (dropped)
 
-#### 🫡 You can help me by Donating
-[![BuyMeACoffee](https://img.shields.io/badge/Buy%20Me%20a%20Coffee-ffdd00?style=for-the-badge&logo=buy-me-a-coffee&logoColor=black)](https://buymeacoffee.com/heytanix)
+## Model Performance
 
-## Algorithms used in the project
- 1. **K-Nearest Neighbors(KNN) Classifier**
- 2. **Logistic Regression**
- 3. **Decision Tree Classifier**
- 4. **Linear Support Vector Classifier (SVC)**
- 5. **Kernelized Support Vector Classifier (SVC)**
- 6. **Random Forest Classifier**
- 7. **Principal Component Analysis (PCA)** (For dimensionality reduction)
+Final model: **Random Forest** trained on **PCA-reduced** (98% variance retained), standardized, imputed features.
 
-## Project workflow
+| Metric | Score |
+|---|---|
+| Test Accuracy | **68.1%** |
+| Test F1 (weighted) | **60.0%** |
 
-### Step 1 : Data exploration
-- Analyzed the 279 features to identify patterns and correlations that could help with the prediction.
-- Addressed the challenge of the high number of features compared to the limited number of examples by employing PCA(Principal component analysis).
+*(Source: [artifacts/metrics.json](artifacts/metrics.json), from a held-out 20% test split)*
 
-### Step 2 : Data pre-processing:
-- Handled missing values, standardized data, and prepared it for machine learning models.
-- Applied **Principal component analysis** to reduce the feature space and eliminate collinearity, improving both execution time and model performance.
+## Pipeline
 
-### Step 3 : Model Training and evaluation
-- Trained various machine learning algorithms on the dataset.
-- Evaluated model performance using accuracy, recall and other relevant metrics.
+```mermaid
+graph TD
+    A[Raw CSV: arrhythmia.csv] --> B["Missing value handling (? → NaN)"]
+    B --> C[Drop column 13]
+    C --> D[Train / test split]
+    D --> E["SimpleImputer (fit on train only)"]
+    E --> F[StandardScaler]
+    F --> G["PCA (98% variance)"]
+    G --> H[Random Forest Classifier]
+    H --> I["Saved artifacts (imputer / scaler / pca / model .joblib)"]
+    I --> J["FastAPI /predict endpoint"]
+    J --> K[Docker container]
+    K --> L[Deployed on Render]
+```
 
-### Step 4 : Model Tuning with PCA
-- PCA helped reduce the complexity of the dataset, leading to improved model accuracy and reduced overfitting.
--  After applying PCA, models were retrained, and significant improvements were observed.
+## API Contract
 
-### Conclusion
-Applying **Principal Component Analysis(PCA)** to the resampled data significantly improved the performance of the models. PCA works by creating non-collinear components that prioritize variables with high variance, thus reducing dimensionality and collinearity, which are key issues in large datasets. PCA not only enhanced the overall execution time but also improved the quality of predictions.
+### `POST /predict`
+
+**Request**
+```json
+{
+  "features": [45.0, 0.0, 175.0, 63.0, 91.0, "... 278 floats total"]
+}
+```
+
+**Response**
+```json
+{
+  "predicted_class": 9,
+  "class_name": "Left Boundle branch block",
+  "confidence": 0.28
+}
+```
+
+Other endpoints:
+- `GET /health` — liveness check, returns `{"status": "ok"}`
+- `GET /schema` — returns the exact ordered feature list and class name mapping, so consumers don't need to read source code to build a valid request
+
+## Tech Stack
+
+- **ML**: scikit-learn (Imputer, StandardScaler, PCA, RandomForestClassifier), pandas, numpy
+- **API**: FastAPI, Pydantic, Uvicorn
+- **Packaging**: Docker (`python:3.11-slim`)
+- **Deployment**: Render
+
+## Run Locally
+
+```bash
+python3 -m venv venv
+source venv/bin/activate
+pip install -r requirements.txt
+
+# (Re)train and export artifacts (optional — artifacts/ is already committed)
+python3 train_and_export.py
+
+# Start the API
+uvicorn main:app --reload
+```
+
+API available at `http://localhost:8000`.
+
+## Run via Docker
+
+```bash
+docker build -t arrhythmia-api .
+docker run -p 8000:8000 arrhythmia-api
+```
+
+## Live Deployment
+
+🔗 `<deployment URL — not yet live>`
 
 ## Acknowledgments
 
 - [UCI Machine Learning Repository](https://archive.ics.uci.edu/ml/datasets/Arrhythmia)
 - [Scikit-learn Documentation](https://scikit-learn.org/stable/)
-- [PCA Concepts](https://towardsdatascience.com/pca-using-python-scikit-learn-e653f8989e60)
 
 ---
 
-This `README.md` offers clear documentation of the objectives, algorithms used, results, and the significance of PCA in your project. It also provides essential information on how to run the project and the prerequisites.
+*This repository has no official medical affiliation and is not intended for clinical use.*
