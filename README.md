@@ -97,7 +97,11 @@ docker run -p 8000:8000 arrhythmia-api
 
 ## Live Deployment
 
-🔗 `<deployment URL — not yet live>`
+🔗 [https://arrhythmia-api.onrender.com](https://arrhythmia-api.onrender.com)
+
+Try it: `curl https://arrhythmia-api.onrender.com/health`
+
+*Note: hosted on Render's free tier, which spins down after inactivity — the first request after idle may take ~30-60s to respond.*
 
 ## Acknowledgments
 
